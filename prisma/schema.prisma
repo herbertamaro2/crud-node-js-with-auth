@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//Criar migration yarn prisma migrate dev
+model User {
+  id String @id @default(uuid())
+  name String?
+  email String @unique
+  password String
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  places Places[]
+  images Images[]
+  @@map("users")
+}
+
+
+model Places {
+  id String @id @default(uuid())
+  trip_title String?
+  user User @relation(fields: [user_id], references: [id])
+  trip_date_start String
+  trip_date_end String
+  description String
+  country_id String?
+  images Json
+  trip_route Json?
+  accommodations Json?
+  restaurants Json?
+  attractions Json?
+  likes Json?
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("places")
+  user_id String
+}
+
+
+model Images {
+  id String @id @default(uuid())
+  name String?
+  user User @relation(fields: [user_id], references: [id])
+  file String
+  description String?
+  active Boolean
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("images")
+  user_id String
+}
